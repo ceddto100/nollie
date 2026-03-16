@@ -9,6 +9,7 @@ const Layout = ({ children }) => {
   const isLoggedIn = !!localStorage.getItem('admin_token');
 
   const navLinks = [
+    { to: '/', label: 'Home' },
     { to: '/blog', label: 'Blog' },
     { to: '/projects', label: 'Projects' },
     { to: '/resume', label: 'Resume' },
