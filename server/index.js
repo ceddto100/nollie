@@ -5,6 +5,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const dotenv = require('dotenv');
 const path = require('path');
+const fs = require('fs');
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
@@ -59,10 +60,18 @@ app.get('/api/health', (req, res) => {
 
 // Serve static frontend in production
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/dist')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-  });
+  const clientDistPath = path.join(__dirname, '../client/dist');
+  const clientIndexPath = path.join(clientDistPath, 'index.html');
+  const hasClientBuild = fs.existsSync(clientIndexPath);
+
+  if (hasClientBuild) {
+    app.use(express.static(clientDistPath));
+    app.get('*', (req, res) => {
+      res.sendFile(clientIndexPath);
+    });
+  } else {
+    console.warn('Client build not found at ../client/dist; serving API only.');
+  }
 }
 
 // 404 for API
