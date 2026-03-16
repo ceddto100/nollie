@@ -6,6 +6,7 @@ const Layout = ({ children }) => {
   const location = useLocation();
 
   const isActive = (path) => location.pathname === path;
+  const isLoggedIn = !!localStorage.getItem('admin_token');
 
   const navLinks = [
     { to: '/blog', label: 'Blog' },
@@ -20,7 +21,7 @@ const Layout = ({ children }) => {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-900/90 backdrop-blur-md border-b border-gray-800/50 text-white shadow-lg">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex justify-between items-center h-16">
-            <Link to="/" className="flex-shrink-0 font-bold text-xl hover:text-cyan-400 transition-colors">
+            <Link to={isLoggedIn ? '/admin/dashboard' : '/'} className="flex-shrink-0 font-bold text-xl hover:text-cyan-400 transition-colors">
               Portfolio
             </Link>
 
