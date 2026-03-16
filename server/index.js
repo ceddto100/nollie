@@ -57,11 +57,13 @@ app.get('/api/health', (req, res) => {
   res.json({ success: true, message: 'API is running', version: '1.0.0' });
 });
 
-// Serve static frontend in production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/dist')));
+// Serve static frontend in production (only if client/dist exists — not present on Render API-only deploys)
+const fs = require('fs');
+const clientDist = path.join(__dirname, '../client/dist');
+if (process.env.NODE_ENV === 'production' && fs.existsSync(clientDist)) {
+  app.use(express.static(clientDist));
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+    res.sendFile(path.join(clientDist, 'index.html'));
   });
 }
 
